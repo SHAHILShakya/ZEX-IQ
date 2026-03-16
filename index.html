@@ -607,7 +607,7 @@ async function callGemini(apiKey,text,imgB64){
   const history=S.messages.slice(-12).map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]}));
   const parts=[{text:text||'Analyze this image in detail.'}];
   if(imgB64)parts.unshift({inline_data:{mime_type:'image/jpeg',data:imgB64}});
-  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:buildSystemPrompt()}]},contents:[...history,{role:'user',parts}],generationConfig:{maxOutputTokens:1500,temperature:0.85}})});
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system_instruction:{parts:[{text:buildSystemPrompt()}]},contents:[...history,{role:'user',parts}],generationConfig:{maxOutputTokens:1500,temperature:0.85}})});
   if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini error');}
   const d=await res.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'No response';
 }
